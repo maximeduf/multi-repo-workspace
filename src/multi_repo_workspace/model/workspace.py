@@ -9,8 +9,8 @@ class Workspace:
         self.path = path
         self.repos = repos
 
-    def get_file_path(self, file_name: str) -> Path:
-        return self.path.joinpath(f"{self.name}/{file_name}")
+    def get_file_path(self) -> Path:
+        return self.path.joinpath(f"{self.name}/{self.name}.yml").absolute()
 
     def __str__(self):
         return f"name: {self.name} ({self.path.absolute()})\n{self.repos}"
