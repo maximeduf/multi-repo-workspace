@@ -1,42 +1,42 @@
+from dataclasses import dataclass
 from typing import Callable, TypeVar
 
 T = TypeVar('T')
 
 
+@dataclass
 class LineArgument:
     """
     Represents a single program argument. (--path)
-    @param name: The name of the argument.  (path)
+    @param name: The name of the argument.  (project_path)
     @param value: The value of the argument. (~/Documents)
-    @param prompt: To be given in the command's __init__.
-    @param confirm: To be given in the command's __init__.
+    @param prompt_fn: To be given in the command's __init__.
+    @param confirm_fn: To be given in the command's __init__.
     """
+    name: str
+    value: T = None
+    prompt_fn: Callable[[str], T] = None
+    confirm_fn: Callable[[T], bool] = None
+    is_confirmed: bool = False
 
-    def __init__(self,
-                 name: str,
-                 value: T = None,
-                 prompt: Callable[[str], T] = None,
-                 confirm: Callable[[T], bool] = None,
-                 is_confirmed: bool = False):
-        self.name = name
-        self.value = value
-        self.prompt = prompt
-        self.confirm = confirm
-        self.is_confirmed = is_confirmed
+    def set_prompts(self, *, prompt_fn: Callable[[str], T],
+                    confirm_fn: Callable[[T], bool]):
+        self.prompt_fn = prompt_fn
+        self.confirm_fn = confirm_fn
 
-    def set_prompts(self, *, prompt: Callable[[str], T],
-                    confirm: Callable[[T], bool]):
-        self.prompt = prompt
-        self.confirm = confirm
+    def confirm_value(self, value: T) -> bool:
+        confirmation = self.confirm_fn(value)
+        self.is_confirmed = confirmation
+        return confirmation
 
     def is_confirmed_str(self):
         return "ready" if self.is_confirmed else "not ready"
 
-    def __repr__(self):
+    def __str__(self):
         repr = f"{self.name}: {self.value} - "
-        repr += f"{'prompt ready' if self.prompt else 'prompt missing'}, "
-        repr += f"{'confirm ready' if self.prompt else 'confirm missing'}, "
-        repr += f"{'ready' if self.is_confirmed else 'not ready'}"
+        repr += f"{'prompt ready' if self.prompt_fn else 'prompt missing'}, "
+        repr += f"{'confirm ready' if self.prompt_fn else 'confirm missing'}, "
+        repr += f"{self.is_confirmed_str()}"
         return repr
 
 

@@ -5,12 +5,13 @@ import click
 
 class Operation:
 
-    def __init__(self, *, name, description, function):
+    def __init__(self, *, name, description, function, arguments: dict = None):
         self.name = name
         self.description = description  # verbose
         self.function = function
         self.has_tried = False
         self.has_succeeded = False
+        self.arguments = arguments
 
     def __call__(self):
         self.has_tried = True
@@ -19,25 +20,26 @@ class Operation:
             self.has_succeeded = True
         except Exception as e:
             self.has_succeeded = False
-            print(e)
+            click.echo(e)
 
 
 class CreateOrUseDirectory(Operation):
 
-    def __init__(self, directory: pathlib.Path):
+    def __init__(self, path: pathlib.Path):
 
         def create_or_use_directory():
             click.echo(
-                click.style(f"Creating or using directory: {directory}",
+                click.style(f"Creating or using directory: {path}",
                             fg='blue',
                             bold=True))
-            click.echo(f"Creating or using directory: {directory}")
-            if not directory.exists():
-                directory.mkdir()
+            click.echo(f"Creating or using directory: {path}")
+            if not path.exists():
+                path.mkdir()
 
         super().__init__(name="CreateOrUseDirectory",
                          description="description",
-                         function=create_or_use_directory)
+                         function=create_or_use_directory,
+                         arguments={"path": path})
 
 
 class CreateFile(Operation):
@@ -54,7 +56,8 @@ class CreateFile(Operation):
 
         super().__init__(name="CreateFile",
                          description="description",
-                         function=create_file)
+                         function=create_file,
+                         arguments={"file": file})
 
 
 class WriteToFile(Operation):
@@ -69,4 +72,8 @@ class WriteToFile(Operation):
 
         super().__init__(name="WriteToFile",
                          description="description",
-                         function=write_to_file)
+                         function=write_to_file,
+                         arguments={
+                             "file": file,
+                             "content": content
+                         })

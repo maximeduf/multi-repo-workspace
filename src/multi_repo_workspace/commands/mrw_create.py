@@ -13,13 +13,14 @@ from typing import List
 class CreateWorkspace(Command[CommandArgs, None]):
     """
     MrwCreate creates a new workspace.
+    CreateWorkspace extends abstract class Command that takes CommandArgs and returns None
 
-    The 2 arguments are workspace_name and workspace_directory. They are optional.
-    If they are not provided, the user will be prompted to enter them.
+    The 2 arguments are workspace_name and workspace_directory. They are optional but required for the command to run.
+    The user is prompted for confirmations and any required argument.
 
-    If the user enters a workspace name that is the same as an existing
-    directory, the user will be prompted to confirm that they want to
-    use that directory.
+    The command creates a workspace directory where the workspace file is created and stored.
+    TODO: The workspace's own git repository is initialized.
+    TODO: The workspace is saved to the database.
     """
 
     def __init__(self, args: dict):
@@ -87,11 +88,11 @@ class CreateWorkspace(Command[CommandArgs, None]):
                 # if value is not set, prompt user
                 if not arg.value:
                     log.debug(f"Prompting user for {arg}")
-                    arg.value = arg.prompt()
+                    arg.value = arg.prompt_fn()
                 # if value is set, confirm it
                 if not arg.is_confirmed:
                     log.debug(f"Confirming {arg.name}")
-                    arg.is_confirmed = arg.confirm(arg.value)
+                    arg.confirm_value(arg.value)
                 # if value was not confirmed, set value to None
                 if not arg.is_confirmed:
                     log.debug(f"{arg} was not confirmed")
@@ -106,16 +107,20 @@ class CreateWorkspace(Command[CommandArgs, None]):
             self.args["workspace_name"].value,
             self.args["workspace_directory"].value.absolute(), None)
         log.debug(f"Workspace object created: {workspace}")
-        file = workspace.get_file_path(f"{workspace.name}.yml").absolute()
-        log.warning(f"File path: {file}")
+
+        file = workspace.get_file_path()
         self.ops.append(CreateFile(file))
         self.ops.append(WriteToFile(file, str(workspace)))
-        log.debug(f"Operations queued : {self.ops}")
+        log.warning(f"Operations queued : {self.ops}")
 
         # execute operations
         for op in self.ops:
-            log.debug(f"Executing operation: {op.name}")
+            log.debug(f"Executing operation: {op.name} with {op.arguments}")
             op()
+            if op.has_succeeded:
+                log.debug(f"Operation {op.name} succeeded")
+            else:
+                log.warning(f"Operation {op.name} failed")
 
         if all(op.has_succeeded for op in self.ops):
             click.echo(
