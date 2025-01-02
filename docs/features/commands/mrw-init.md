@@ -1,5 +1,5 @@
-# mrw apply
-Apply a workspace definition. It will initialize the workspace before if not already done.
+# mrw init
+Initialize a workspace. It will apply the workspace if it is already initialized.
 More precisely, ensure that:
 - repositories listed are cloned.
 - the workspace folder is version controlled with git.
@@ -7,9 +7,9 @@ More precisely, ensure that:
 ## synopsis
 **in the same folder as a workspace file**
 ```bash
-mrw apply
+mrw init
 ```
 **to apply a specified workspace file in its current directory**
 ```bash
-mrw apply --file ../tests/test-workspace.yml
+mrw init --file ../tests/test-workspace.yml
 ``` 

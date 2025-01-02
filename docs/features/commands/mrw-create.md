@@ -1,5 +1,5 @@
 # mrw create
-Create a workspace definition file named WORKSPACE_NAME
+Creates the starter folder and file without initializing the workspace.
 
 ## synopsis
 from `mrw create --help`.

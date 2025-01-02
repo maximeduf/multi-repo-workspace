@@ -1,7 +1,7 @@
 # Quick Start Guide
 ## With the CLI
 **create workspace**
-```
+```(bash)
 mrw create
 ```
 
@@ -10,7 +10,7 @@ mrw create
 mrw repo add
 ```
 
-**init the workspace** (clone repositories(for now))
+**init the workspace**
 ```
 mrw init
 ```
@@ -36,7 +36,7 @@ repos:
     initial_branch: develop
 
 ```
-**run the init command**
+**run the init command** (not yet implemented)
 ```
 mrw init
 ```
