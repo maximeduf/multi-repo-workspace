@@ -16,4 +16,4 @@ For [development, look here](../development/setup.md).
 `mrw -v`
 
 ## Next
-See [Quick Start Guide](quick-start.md).
+See [Quick Start Guide](./quick-start.md).

@@ -35,5 +35,5 @@ or
 `mrw -v`
 
 ## Next
-See [Quick Start Guide](quick-start.md).
+See [Quick Start Guide](../getting-started/quick-start.md).
 See [Contributing](./contributing.md).
