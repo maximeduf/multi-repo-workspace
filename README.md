@@ -5,7 +5,7 @@
 For full documentation see [mrw documentation](./docs/README.md).
 
 ## Prerequisites
-for python prerequisites see [installation documentation](./docs/development/installation.md).
+for python prerequisites see [installation documentation](./docs/getting-started/installation.md).
 
 ## Install and Run for development
 in venv activated
